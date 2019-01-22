@@ -16,4 +16,6 @@ utils.print_config_list(config)
 
 selected_config = input()
 
+configurator.git_config()
+
 configurator.execute_config(config[int(selected_config)])

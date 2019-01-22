@@ -1,11 +1,11 @@
-import subprocess
 from shlex import quote
-
+import consolehelper
 
 def install(packages):
     s = pacman("-S", packages)
     if s["code"] != 0:
         raise Exception("Failed to install: {0}".format(s["stderr"]))
+
 
 def get_installed():
     interim = {}
@@ -41,15 +41,12 @@ def get_installed():
         results.append(interim[x])
     return results
 
+
 def pacman(flags, pkgs=[]):
     cmd = ["sudo", "pacman", "--noconfirm", flags]
     if pkgs:
-      if type(pkgs) == list:
-        cmd += [quote(s) for s in pkgs]
-      else:
-        cmd += [pkgs]
-    p = subprocess.Popen(cmd, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
-    data = p.communicate()
-    data = {"code": p.returncode, "stdout": data[0].decode(),
-            "stderr": data[1].rstrip(b'\n').decode()}
-    return data
+        if type(pkgs) == list:
+            cmd += [quote(s) for s in pkgs]
+        else:
+            cmd += [pkgs]
+    return consolehelper.execute(cmd)

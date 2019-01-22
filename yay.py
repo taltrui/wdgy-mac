@@ -1,5 +1,6 @@
-import subprocess
+import consolehelper
 from shlex import quote
+
 
 def install(packages):
     s = yay("-S", packages)
@@ -41,15 +42,12 @@ def get_installed():
         results.append(interim[x])
     return results
 
+
 def yay(flags, pkgs=[]):
     cmd = ["yay", "--noconfirm", flags]
     if pkgs:
-      if type(pkgs) == list:
-        cmd += [quote(s) for s in pkgs]
-      else:
-        cmd += [pkgs]
-    p = subprocess.Popen(cmd, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
-    data = p.communicate()
-    data = {"code": p.returncode, "stdout": data[0].decode(),
-            "stderr": data[1].rstrip(b'\n').decode()}
-    return data
+        if type(pkgs) == list:
+            cmd += [quote(s) for s in pkgs]
+        else:
+            cmd += [pkgs]
+    return consolehelper.execute(cmd)

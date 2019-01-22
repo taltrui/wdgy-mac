@@ -21,8 +21,8 @@ This files should have the following structure:
 
 ```javascript
 {
-  name: "Web",
-  apps: [node, npm, yarn]
+  "name": "Web",
+  "apps": [nodejs, npm, yarn]
 }
 ```
 ### 2. Custom commands :memo:
@@ -34,9 +34,9 @@ You can add, in adition to the apps array in a config file, custom commands.
 Lets pretend you want to create a folder and clone inside a repo, you can add a "command" key to the config json:
 ```javascript
 {
-  name: "Web",
-  apps: [node, npm, yarn],
-  command: ["mkdir Workspace", "git clone repo-url"]
+  "name": "Web",
+  "apps": [node, npm, yarn],
+  "commands": ["mkdir Workspace", "cd Workspace", "git clone repo-url"]
 }
 ```
 Then every command will execute one by one.

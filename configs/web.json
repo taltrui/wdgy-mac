@@ -1,0 +1,5 @@
+{
+  "name": "Web",
+  "apps": ["npm", "yarn", "nodejs"],
+  "commands": ["mkdir Workspace", "git clone https://github.com/widergy/UtilityGO-Office-Web-Edenor"]
+}

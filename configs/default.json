@@ -1,0 +1,4 @@
+{
+  "name": "default",
+  "apps": ["google-chrome", "visual-studio-code-bin", "postman-bin", "slack-desktop"]
+}

@@ -16,6 +16,22 @@ def install(packages):
                 'Se instalo satisfactoriamente: ' + packages)
 
 
+
+
+def filter_installed(packages):
+    installed_list = get_installed()
+    upgradable_list = []
+    not_installed_list = []
+    if isinstance(packages, list):
+        for package in packages:
+            if not installed_list[package]['installed']:
+                not_installed_list += package
+            elif installed_list[package]['upgradable']:
+                upgradable_list += package
+    return {'upgradable': upgradable_list, 'to_install': not_installed_list}
+
+
+
 def get_installed():
     interim = {}
     s = pacman("-Q")
@@ -45,10 +61,7 @@ def get_installed():
             r = interim[name]
             r["upgradable"] = x[1]
             interim[name] = r
-    results = []
-    for x in interim:
-        results.append(interim[x])
-    return results
+    return interim
 
 
 def pacman(flags, pkgs=[]):

@@ -7,5 +7,4 @@ def execute(command):
     data = p.communicate()
     data = {"code": p.returncode, "stdout": data[0].decode(),
             "stderr": data[1].rstrip(b'\n').decode()}
-    print(data)
     return data

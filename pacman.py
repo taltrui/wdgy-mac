@@ -1,10 +1,19 @@
 from shlex import quote
 import consolehelper
+import texthelper
+
 
 def install(packages):
     s = pacman("-S", packages)
     if s["code"] != 0:
         raise Exception("Failed to install: {0}".format(s["stderr"]))
+    else:
+        if isinstance(packages, list):
+            texthelper.print_success(
+                'Se instalo satisfactoriamente: ' + ', '.join(packages))
+        else:
+            texthelper.print_success(
+                'Se instalo satisfactoriamente: ' + packages)
 
 
 def get_installed():

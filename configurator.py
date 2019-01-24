@@ -58,7 +58,7 @@ def execute_config(config):
     print_desc(config['name'])
     texthelper.new_line()
     texthelper.print_info('Instalando yay...')
-    pacman.install(['yay', 'npm', 'evolution'])
+    pacman.install(['evolution'])
 
 def print_desc(name):
     if name in api_names:
@@ -68,4 +68,4 @@ def print_desc(name):
         texthelper.print_success(
             'Buena capo, entraste al mejor team de Widergy!')
     if name in mobile_names:
-        texthelper.print_warning('Beep boop... team not found... beep boop...')
+        texthelper.print_warning('SORRY, APP CRASHED, TRY AGAIN LATER')

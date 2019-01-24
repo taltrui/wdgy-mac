@@ -4,32 +4,65 @@ import texthelper
 
 
 def install(packages):
-    s = pacman("-S", packages)
-    if s["code"] != 0:
-        raise Exception("Failed to install: {0}".format(s["stderr"]))
-    else:
-        if isinstance(packages, list):
-            texthelper.print_success(
-                'Se instalo satisfactoriamente: ' + ', '.join(packages))
+    filtered_pkgs = filer_packages(packages)
+
+    if len(filtered_pkgs['installed']) > 0:
+        texthelper.print_info(
+            'Los siguientes paquetes se encuentran instalados y actualizados, se omitiran:')
+        print(','.join(filtered_pkgs['installed']))
+
+    if len(filtered_pkgs['upgradable']) > 0:
+        texthelper.print_info(
+            'Los siguientes paquetes se encuentran instalados y pueden ser actualizados:')
+        print(','.join(filtered_pkgs['upgradable']))
+        texthelper.new_line()
+        should_upgrade = input(
+            'Ingrese Y para actualizar o N para omitir: ')
+
+        while should_upgrade != 'Y' and should_upgrade != 'N':
+            should_upgrade = input(
+                'Ingrese Y para actualizar o N para omitir: ')
+
+        if should_upgrade == 'Y':
+            upgrade = pacman('-S', filtered_pkgs['upgradable'])
+            if upgrade["code"] != 0:
+                raise Exception(
+                    "Fallo al actualizar: {0}".format(upgrade["stderr"]))
+            else:
+                texthelper.print_success(
+                    'Se actualizo satisfactoriamente: ' + ', '.join(filtered_pkgs['upgradable']))
+
+    if len(filtered_pkgs['to_install']) > 0:
+        install = pacman("-S", filtered_pkgs['to_install'])
+        if install["code"] != 0:
+            raise Exception(
+                "Fallo la instalacion: {0}".format(install["stderr"]))
         else:
             texthelper.print_success(
-                'Se instalo satisfactoriamente: ' + packages)
+                'Se instalo satisfactoriamente: ' + ', '.join(filtered_pkgs['to_install']))
 
 
-
-
-def filter_installed(packages):
-    installed_list = get_installed()
+def filer_packages(packages):
+    installed_pkg = get_installed()
     upgradable_list = []
     not_installed_list = []
+    installed_list = []
     if isinstance(packages, list):
         for package in packages:
-            if not installed_list[package]['installed']:
-                not_installed_list += package
-            elif installed_list[package]['upgradable']:
-                upgradable_list += package
-    return {'upgradable': upgradable_list, 'to_install': not_installed_list}
-
+            if not package in installed_pkg:
+                not_installed_list += [package]
+            elif installed_pkg[package]['upgradable']:
+                upgradable_list += [package]
+            else:
+                installed_list += [package]
+    else:
+        if not packages in installed_pkg:
+            not_installed_list += [packages]
+        elif installed_pkg[packages]['upgradable']:
+            upgradable_list += [packages]
+        else:
+            installed_list += [packages]
+    return {'upgradable': upgradable_list, 'to_install': not_installed_list, 'installed': installed_list}
 
 
 def get_installed():

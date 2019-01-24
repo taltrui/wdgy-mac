@@ -58,7 +58,7 @@ def execute_config(config):
     print_desc(config['name'])
     texthelper.new_line()
     texthelper.print_info('Instalando yay...')
-    pacman.install('yay')
+    pacman.install(['yay', 'npm', 'evolution'])
 
 def print_desc(name):
     if name in api_names:

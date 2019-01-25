@@ -1,5 +1,5 @@
 {
-  "name": "Web",
+  "name": "Api",
   "apps": ["npm", "yarn", "nodejs"],
   "commands": [
     "mkdir Workspace",

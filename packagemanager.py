@@ -3,8 +3,8 @@ import consolehelper
 import texthelper
 
 
-def install(packages):
-    filtered_pkgs = filer_packages(packages)
+def install(manager, packages):
+    filtered_pkgs = filer_packages(manager, packages)
 
     if len(filtered_pkgs['installed']) > 0:
         texthelper.print_info(
@@ -24,7 +24,8 @@ def install(packages):
                 'Ingrese Y para actualizar o N para omitir: ')
 
         if should_upgrade == 'Y':
-            upgrade = pacman('-S', 'Actualizando paquetes', filtered_pkgs['upgradable'])
+            upgrade = execute(manager, '-S', 'Actualizando paquetes',
+                              filtered_pkgs['upgradable'])
             if upgrade["code"] != 0:
                 raise Exception(
                     "Fallo al actualizar: {0}".format(upgrade["stderr"]))
@@ -33,7 +34,8 @@ def install(packages):
                     'Se actualizo satisfactoriamente: ' + ', '.join(filtered_pkgs['upgradable']))
 
     if len(filtered_pkgs['to_install']) > 0:
-        install = pacman("-S", 'Instalando paquetes', filtered_pkgs['to_install'])
+        install = execute(manager, "-S", 'Instalando paquetes',
+                          filtered_pkgs['to_install'])
         if install["code"] != 0:
             raise Exception(
                 "Fallo la instalacion: {0}".format(install["stderr"]))
@@ -42,8 +44,8 @@ def install(packages):
                 'Se instalo satisfactoriamente: ' + ', '.join(filtered_pkgs['to_install']))
 
 
-def filer_packages(packages):
-    installed_pkg = get_installed()
+def filer_packages(manager, packages):
+    installed_pkg = get_installed(manager)
     upgradable_list = []
     not_installed_list = []
     installed_list = []
@@ -65,9 +67,9 @@ def filer_packages(packages):
     return {'upgradable': upgradable_list, 'to_install': not_installed_list, 'installed': installed_list}
 
 
-def get_installed():
+def get_installed(manager):
     interim = {}
-    s = pacman("-Q", 'Obteniendo lista de paquetes instalados')
+    s = execute(manager, "-Q", 'Obteniendo lista de paquetes instalados')
     if s["code"] != 0:
         raise Exception(
             "Failed to get installed list: {0}".format(s["stderr"])
@@ -80,7 +82,7 @@ def get_installed():
             "id": x[0], "version": x[1], "upgradable": False,
             "installed": True
         }
-    s = pacman("-Qu", 'Obteniendo lista de paquetes actualizables')
+    s = execute(manager, "-Qu", 'Obteniendo lista de paquetes actualizables')
     if s["code"] != 0 and s["stderr"]:
         raise Exception(
             "Failed to get upgradable list: {0}".format(s["stderr"])
@@ -97,8 +99,8 @@ def get_installed():
     return interim
 
 
-def pacman(flags, loading_message, pkgs=[]):
-    cmd = ["sudo", "pacman", "--noconfirm", flags]
+def execute(manager, flags, loading_message, pkgs=[]):
+    cmd = [manager, "--noconfirm", flags]
     if pkgs:
         if type(pkgs) == list:
             cmd += [quote(s) for s in pkgs]

@@ -1,8 +1,7 @@
 import texthelper
 import os
 import consolehelper
-import pacman
-import yay
+import packagemanager
 
 api_names = ['api', 'Api', 'API', 'backend', 'BACKEND', 'Backend']
 web_names = ['Web', 'web', 'WEB']
@@ -38,9 +37,9 @@ def git_config():
     git_credentials_file.close()
 
     email_com = consolehelper.execute(
-        ['git', 'config', '--global', 'user.email', email])
+        ['git', 'config', '--global', 'user.email', email], "Seteando git email")
     name_com = consolehelper.execute(
-        ['git', 'config', '--global', 'user.name', name])
+        ['git', 'config', '--global', 'user.name', name], "Seteando ")
 
     texthelper.new_line()
     if email_com["code"] == 0 and name_com["code"] == 0:
@@ -57,8 +56,8 @@ def git_config():
 def execute_config(config):
     print_desc(config['name'])
     texthelper.new_line()
-    texthelper.print_info('Instalando yay...')
-    pacman.install(['evolution'])
+    git_config()
+    packagemanager.install("pacman", ['yay'])
 
 def print_desc(name):
     if name in api_names:

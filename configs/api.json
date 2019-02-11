@@ -1,9 +1,9 @@
 {
   "name": "Api",
-  "apps": ["npm", "yarn", "nodejs"],
-  "commands": [
-    "mkdir Workspace",
-    "cd Workspace",
-    "git clone https://github.com/widergy/UtilityGO-Office-Web-Edenor"
-  ]
+  "apps": ["npm", "yarn", "mailspring"],
+  "clone": [
+    "https://github.com/widergy/UtilityGO-Office-Web-Edenor",
+    "https://github.com/widergy/UtilityGO-Office-Web"
+  ],
+  "zsh": true
 }

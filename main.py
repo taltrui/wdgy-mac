@@ -1,16 +1,16 @@
 from colorama import init
-import texthelper
+import text_helper
 import utils
 import configurator
 
 init()
 
-texthelper.print_header('Bienvenido al configurador automatico de Manjaro!')
-texthelper.new_line()
+text_helper.print_header('Bienvenido al configurador automatico de Manjaro!')
+text_helper.new_line()
 
 config = utils.build_config()
 
-texthelper.print_header('Selecciona la configuracion:')
+text_helper.print_header('Selecciona la configuracion:')
 
 utils.print_config_list(config)
 
